@@ -1,0 +1,70 @@
+export const lightTheme = {
+  colors: {
+    primary: '#3B82F6',
+    primaryHover: '#2563EB',
+    secondary: '#8B5CF6',
+    secondaryHover: '#7C3AED',
+    accent: '#10B981',
+    success: '#10B981',
+    warning: '#F59E0B',
+    error: '#EF4444',
+    background: '#F8FAFC',
+    surface: '#FFFFFF',
+    surfaceHover: '#F1F5F9',
+    text: '#1E293B',
+    textSecondary: '#64748B',
+    textMuted: '#94A3B8',
+    border: '#E2E8F0',
+    borderHover: '#CBD5E1',
+    shadow: 'rgba(0, 0, 0, 0.1)',
+    shadowHover: 'rgba(0, 0, 0, 0.15)',
+  },
+  gradients: {
+    primary: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
+    success: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+    error: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+    xxl: '3rem',
+  },
+  borderRadius: {
+    sm: '0.375rem',
+    md: '0.5rem',
+    lg: '0.75rem',
+    xl: '1rem',
+    full: '9999px',
+  },
+  breakpoints: {
+    mobile: '768px',
+    tablet: '1024px',
+    desktop: '1280px',
+  },
+};
+
+export const darkTheme = {
+  ...lightTheme,
+  colors: {
+    ...lightTheme.colors,
+    primary: '#60A5FA',
+    primaryHover: '#3B82F6',
+    secondary: '#A78BFA',
+    secondaryHover: '#8B5CF6',
+    background: '#0F172A',
+    surface: '#1E293B',
+    surfaceHover: '#334155',
+    text: '#F1F5F9',
+    textSecondary: '#CBD5E1',
+    textMuted: '#94A3B8',
+    border: '#334155',
+    borderHover: '#475569',
+    shadow: 'rgba(0, 0, 0, 0.3)',
+    shadowHover: 'rgba(0, 0, 0, 0.4)',
+  },
+};
+
+export type Theme = typeof lightTheme;
