@@ -1,6 +1,6 @@
 import { useAuth } from "../../contexts/AuthContext";
 
-const Home = () => {
+export const Home = () => {
   const { user } = useAuth();
 
   return (
@@ -11,4 +11,3 @@ const Home = () => {
   );
 };
 
-export default Home;
