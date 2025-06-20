@@ -135,10 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateProgress = (category: Category, isCorrect: boolean) => {
     if (!userProgress) return;
 
-    const updatedCategory =
-      userProgress.categoryProgress[
-        category as keyof typeof userProgress.categoryProgress
-      ];
+    const updatedCategory = userProgress.categoryProgress[category];
 
     const updatedProgress: UserProgress = {
       ...userProgress,
