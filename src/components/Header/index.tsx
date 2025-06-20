@@ -10,9 +10,11 @@ import {
   LogoText,
   UserInfo,
 } from "./styles";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Header: React.FC = () => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { user, logout } = useAuth();
 
   return (
     <HeaderContainer>
@@ -25,16 +27,20 @@ export const Header: React.FC = () => {
         </Logo>
 
         <HeaderActions>
-          <UserInfo>
-            <User size={16} />
-            <span>Bryan</span>
-          </UserInfo>
+          {user && (
+            <UserInfo>
+              <User size={16} />
+              <span>{user.name}</span>
+            </UserInfo>
+          )}
           <IconButton onClick={toggleTheme} aria-label="Toggle dark mode">
             {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </IconButton>
-          <IconButton onClick={() => {}} aria-label="Logout">
-            <LogOut size={20} />
-          </IconButton>
+          {user && (
+            <IconButton onClick={logout} aria-label="Logout">
+              <LogOut size={20} />
+            </IconButton>
+          )}
         </HeaderActions>
       </HeaderContent>
     </HeaderContainer>
