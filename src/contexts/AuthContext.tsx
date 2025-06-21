@@ -1,12 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import type { Category } from "../types/quiz";
 
 interface User {
   id: string;
   email: string;
   name: string;
 }
-
-export type Category = "React" | "JavaScript" | "HTML" | "CSS";
 
 interface UserProgress {
   totalQuestions: number;
