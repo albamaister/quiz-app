@@ -6,38 +6,6 @@ export const QuizContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.xl};
 `;
 
-export const ProgressSection = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`;
-
-export const ProgressInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-export const ProgressText = styled.span`
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.textSecondary};
-`;
-
-export const ProgressBar = styled.div`
-  width: 100%;
-  height: 0.75rem;
-  background: ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  overflow: hidden;
-`;
-
-export const ProgressFill = styled.div<{ $percentage: number }>`
-  width: ${({ $percentage }) => $percentage}%;
-  height: 100%;
-  background: ${({ theme }) => theme.gradients.primary};
-  transition: width 0.5s ease;
-`;
-
 //Card
 
 export const QuestionCard = styled.div`
@@ -88,123 +56,6 @@ export const OptionsContainer = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
 `;
 
-export const OptionButton = styled.button<{
-  $isSelected: boolean;
-  $isCorrect?: boolean;
-  $showFeedback: boolean;
-}>`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  border: 2px solid;
-  background: ${({ theme }) => theme.colors.surface};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: ${({ $showFeedback }) => ($showFeedback ? "default" : "pointer")};
-  transition: all 0.2s ease;
-
-  ${({ $isSelected, $isCorrect, $showFeedback, theme }) => {
-    if (!$showFeedback) {
-      return $isSelected
-        ? `
-          border-color: ${theme.colors.primary};
-          background: ${theme.colors.primary}10;
-        `
-        : `
-          border-color: ${theme.colors.border};
-          &:hover {
-            border-color: ${theme.colors.borderHover};
-            background: ${theme.colors.surfaceHover};
-          }
-        `;
-    }
-
-    if ($isCorrect) {
-      return `
-        border-color: ${theme.colors.success};
-        background: ${theme.colors.success}10;
-      `;
-    }
-
-    if ($isSelected && !$isCorrect) {
-      return `
-        border-color: ${theme.colors.error};
-        background: ${theme.colors.error}10;
-      `;
-    }
-
-    return `
-      border-color: ${theme.colors.border};
-      opacity: 0.5;
-    `;
-  }}
-`;
-
-export const OptionContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-`;
-
-export const OptionLetter = styled.span<{
-  $isSelected: boolean;
-  $isCorrect?: boolean;
-  $showFeedback: boolean;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: ${({ theme }) => theme.borderRadius.full};
-  font-weight: 700;
-  font-size: 0.875rem;
-
-  ${({ $isSelected, $isCorrect, $showFeedback, theme }) => {
-    if (!$showFeedback) {
-      return $isSelected
-        ? `
-          background: ${theme.colors.primary};
-          color: white;
-        `
-        : `
-          background: ${theme.colors.border};
-          color: ${theme.colors.textMuted};
-        `;
-    }
-
-    if ($isCorrect) {
-      return `
-        background: ${theme.colors.success};
-        color: white;
-      `;
-    }
-
-    if ($isSelected && !$isCorrect) {
-      return `
-        background: ${theme.colors.error};
-        color: white;
-      `;
-    }
-
-    return `
-      background: ${theme.colors.border};
-      color: ${theme.colors.textMuted};
-    `;
-  }}
-`;
-
-export const OptionText = styled.span`
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-export const FeedbackIcon = styled.div<{ $isCorrect: boolean }>`
-  color: ${({ $isCorrect, theme }) =>
-    $isCorrect ? theme.colors.success : theme.colors.error};
-`;
-
 //explain
 
 export const ExplanationBox = styled.div`
@@ -245,41 +96,6 @@ export const ActionButton = styled.button<{ $disabled?: boolean }>`
     transform: translateY(-1px);
     box-shadow: 0 4px 12px ${({ theme }) => theme.colors.shadow};
   }
-`;
-
-export const CompletionCard = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.borderRadius.xl};
-  padding: ${({ theme }) => theme.spacing.xxl};
-  text-align: center;
-  box-shadow: 0 4px 6px ${({ theme }) => theme.colors.shadow};
-`;
-
-export const CompletionIcon = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  color: ${({ theme }) => theme.colors.warning};
-`;
-
-export const CompletionTitle = styled.h2`
-  font-size: 2rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-export const ScoreDisplay = styled.div`
-  font-size: 3rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
-  margin: ${({ theme }) => theme.spacing.xl} 0;
-`;
-
-export const ScoreText = styled.div`
-  font-size: 1.25rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
 `;
 
 export const BackButton = styled.button`

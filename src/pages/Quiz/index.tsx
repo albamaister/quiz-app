@@ -1,36 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import {
   QuizContainer,
-  ProgressSection,
-  ProgressInfo,
-  ProgressText,
-  ProgressBar,
-  ProgressFill,
   QuestionCard,
   CategoryBadge,
   QuestionText,
   BackButton,
-  OptionsContainer,
-  OptionButton,
-  OptionContent,
-  OptionLetter,
-  OptionText,
-  FeedbackIcon,
   ExplanationBox,
   ExplanationTitle,
   ExplanationText,
   ActionButton,
-  CompletionCard,
-  CompletionTitle,
-  CompletionIcon,
-  ScoreDisplay,
-  ScoreText,
+  OptionsContainer,
 } from "./styles";
 
-import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { useQuizLogic } from "./useQuizLogic";
 import { questions } from "../../data/questions";
+import { ProgressBarComponent } from "../../components/ProgressBarComponent";
+import { OptionButtonComponent } from "../../components/OptionButtonComponent";
+import { QuizComplete } from "../../components/QuizComplete";
 
 export const Quiz = () => {
   const {
@@ -38,50 +26,24 @@ export const Quiz = () => {
     currentQuestion,
     isQuizComplete,
     progressPercentage,
-    handleAnswerSelect,
     handleButtonClick,
     getButtonText,
     handleRestartQuiz,
+    handleAnswerSelect,
   } = useQuizLogic();
 
   const navigate = useNavigate();
 
-
   if (isQuizComplete) {
-
     const percentage = Math.round((quizState.score / questions.length) * 100);
 
     return (
       <QuizContainer>
-        <CompletionCard>
-          <CompletionIcon>
-            <Check size={64} />
-          </CompletionIcon>
-
-          <CompletionTitle>Quiz Complete!</CompletionTitle>
-
-          <ScoreDisplay>
-            {quizState.score}/{questions.length}
-          </ScoreDisplay>
-          <ScoreText>{percentage}% Correct</ScoreText>
-
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              justifyContent: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <ActionButton onClick={handleRestartQuiz}>
-              <RotateCcw size={20} />
-              Try Again
-            </ActionButton>
-            <ActionButton onClick={() => console.log("View Progress")}>
-              View Progress
-            </ActionButton>
-          </div>
-        </CompletionCard>
+        <QuizComplete
+          percentage={percentage}
+          quizState={quizState}
+          handleRestartQuiz={handleRestartQuiz}
+        />
       </QuizContainer>
     );
   }
@@ -89,17 +51,11 @@ export const Quiz = () => {
   return (
     <QuizContainer>
       <BackButton onClick={() => navigate("/")}>← Back to Dashboard</BackButton>
-      <ProgressSection>
-        <ProgressInfo>
-          <ProgressText>
-            Question {quizState.currentQuestion + 1} of {10 /* update */}
-          </ProgressText>
-          <ProgressText>{progressPercentage}%</ProgressText>
-        </ProgressInfo>
-        <ProgressBar>
-          <ProgressFill $percentage={progressPercentage} />
-        </ProgressBar>
-      </ProgressSection>
+
+      <ProgressBarComponent
+        quizState={quizState}
+        progressPercentage={progressPercentage}
+      />
 
       <QuestionCard>
         <CategoryBadge $category={currentQuestion.category}>
@@ -109,46 +65,13 @@ export const Quiz = () => {
         <QuestionText>{currentQuestion.question}</QuestionText>
         <OptionsContainer>
           {currentQuestion.options.map((option) => (
-            <OptionButton
+            <OptionButtonComponent
               key={option.id}
-              $isSelected={quizState.selectedAnswer === option.id}
-              $isCorrect={
-                quizState.showFeedback &&
-                option.id === currentQuestion.correctAnswer
-              }
-              $showFeedback={quizState.showFeedback}
-              onClick={() => handleAnswerSelect(option.id)}
-            >
-              <OptionContent>
-                <OptionLetter
-                  $isSelected={quizState.selectedAnswer === option.id}
-                  $isCorrect={
-                    quizState.showFeedback &&
-                    option.id === currentQuestion.correctAnswer
-                  }
-                  $showFeedback={quizState.showFeedback}
-                >
-                  {option.id}
-                </OptionLetter>
-
-                <OptionText>{option.text}</OptionText>
-              </OptionContent>
-
-              {quizState.showFeedback &&
-                (option.id === currentQuestion.correctAnswer ||
-                  (quizState.selectedAnswer === option.id &&
-                    option.id !== currentQuestion.correctAnswer)) && (
-                  <FeedbackIcon
-                    $isCorrect={option.id === currentQuestion.correctAnswer}
-                  >
-                    {option.id === currentQuestion.correctAnswer ? (
-                      <Check size={20} />
-                    ) : (
-                      <X size={20} />
-                    )}
-                  </FeedbackIcon>
-                )}
-            </OptionButton>
+              option={option}
+              quizState={quizState}
+              currentQuestion={currentQuestion}
+              handleAnswerSelect={handleAnswerSelect}
+            />
           ))}
         </OptionsContainer>
         {quizState.showFeedback && (
