@@ -41,7 +41,7 @@ export const Quiz = () => {
       <QuizContainer>
         <QuizComplete
           percentage={percentage}
-          quizState={quizState}
+          score={quizState.score}
           handleRestartQuiz={handleRestartQuiz}
         />
       </QuizContainer>
@@ -53,7 +53,7 @@ export const Quiz = () => {
       <BackButton onClick={() => navigate("/")}>← Back to Dashboard</BackButton>
 
       <ProgressBarComponent
-        quizState={quizState}
+        currentQuestion={quizState.currentQuestion}
         progressPercentage={progressPercentage}
       />
 
@@ -69,7 +69,7 @@ export const Quiz = () => {
               key={option.id}
               option={option}
               quizState={quizState}
-              currentQuestion={currentQuestion}
+              correctAnswer={currentQuestion.correctAnswer}
               handleAnswerSelect={handleAnswerSelect}
             />
           ))}

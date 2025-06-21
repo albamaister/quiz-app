@@ -1,5 +1,3 @@
-import type { QuizState } from "../../types/quiz";
-
 import {
   ProgressSection,
   ProgressInfo,
@@ -9,19 +7,19 @@ import {
 } from "./styles";
 
 interface ProgressBarProps {
-  quizState: QuizState;
+  currentQuestion: number;
   progressPercentage: number;
 }
 
 export const ProgressBarComponent: React.FC<ProgressBarProps> = ({
-  quizState,
+  currentQuestion,
   progressPercentage,
 }) => {
   return (
     <ProgressSection>
       <ProgressInfo>
         <ProgressText>
-          Question {quizState.currentQuestion + 1} of {10 /* update */}
+          Question {currentQuestion + 1} of {10 /* update */}
         </ProgressText>
         <ProgressText>{progressPercentage}%</ProgressText>
       </ProgressInfo>

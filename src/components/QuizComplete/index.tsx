@@ -8,16 +8,15 @@ import {
 } from "./styles";
 import { ActionButton } from "../../pages/Quiz/styles";
 import { questions } from "../../data/questions";
-import type { QuizState } from "../../types/quiz";
 
 interface QuizCompleteProps {
-  quizState: QuizState;
+  score: number;
   handleRestartQuiz: () => void;
   percentage: number;
 }
 
 export const QuizComplete: React.FC<QuizCompleteProps> = ({
-  quizState,
+  score,
   handleRestartQuiz,
   percentage,
 }) => {
@@ -30,7 +29,7 @@ export const QuizComplete: React.FC<QuizCompleteProps> = ({
       <CompletionTitle>Quiz Complete!</CompletionTitle>
 
       <ScoreDisplay>
-        {quizState.score}/{questions.length}
+        {score}/{questions.length}
       </ScoreDisplay>
       <ScoreText>{percentage}% Correct</ScoreText>
 

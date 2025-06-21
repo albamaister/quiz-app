@@ -1,4 +1,4 @@
-import type { Question, QuizState } from "../../types/quiz";
+import type { QuizState } from "../../types/quiz";
 import {
   OptionButton,
   OptionContent,
@@ -12,21 +12,21 @@ import { Check, X } from "lucide-react";
 interface OptionButtonProps {
   option: { id: string; text: string };
   quizState: QuizState;
-  currentQuestion: Question;
+  correctAnswer: string;
   handleAnswerSelect: (answerId: string) => void;
 }
 
 export const OptionButtonComponent: React.FC<OptionButtonProps> = ({
   option,
   quizState,
-  currentQuestion,
+  correctAnswer,
   handleAnswerSelect,
 }) => {
   return (
     <OptionButton
       $isSelected={quizState.selectedAnswer === option.id}
       $isCorrect={
-        quizState.showFeedback && option.id === currentQuestion.correctAnswer
+        quizState.showFeedback && option.id === correctAnswer
       }
       $showFeedback={quizState.showFeedback}
       onClick={() => handleAnswerSelect(option.id)}
@@ -36,7 +36,7 @@ export const OptionButtonComponent: React.FC<OptionButtonProps> = ({
           $isSelected={quizState.selectedAnswer === option.id}
           $isCorrect={
             quizState.showFeedback &&
-            option.id === currentQuestion.correctAnswer
+            option.id === correctAnswer
           }
           $showFeedback={quizState.showFeedback}
         >
@@ -47,13 +47,13 @@ export const OptionButtonComponent: React.FC<OptionButtonProps> = ({
       </OptionContent>
 
       {quizState.showFeedback &&
-        (option.id === currentQuestion.correctAnswer ||
+        (option.id === correctAnswer ||
           (quizState.selectedAnswer === option.id &&
-            option.id !== currentQuestion.correctAnswer)) && (
+            option.id !== correctAnswer)) && (
           <FeedbackIcon
-            $isCorrect={option.id === currentQuestion.correctAnswer}
+            $isCorrect={option.id === correctAnswer}
           >
-            {option.id === currentQuestion.correctAnswer ? (
+            {option.id === correctAnswer ? (
               <Check size={20} />
             ) : (
               <X size={20} />
