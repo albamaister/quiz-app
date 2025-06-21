@@ -1,4 +1,5 @@
 import { Check, RotateCcw } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   CompletionCard,
   CompletionTitle,
@@ -20,6 +21,7 @@ export const QuizComplete: React.FC<QuizCompleteProps> = ({
   handleRestartQuiz,
   percentage,
 }) => {
+  const navigate = useNavigate();
   return (
     <CompletionCard>
       <CompletionIcon>
@@ -45,7 +47,7 @@ export const QuizComplete: React.FC<QuizCompleteProps> = ({
           <RotateCcw size={20} />
           Try Again
         </ActionButton>
-        <ActionButton onClick={() => console.log("View Progress")}>
+        <ActionButton onClick={() => navigate("/progress")}>
           View Progress
         </ActionButton>
       </div>

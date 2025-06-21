@@ -18,8 +18,12 @@ import {
   ProgressText,
 } from "./styles";
 
+import { useNavigate } from "react-router-dom";
+
+
 import { Trophy, Target, TrendingUp, Award } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import { BackButton } from "../Quiz/styles";
 
 const categoryColors = {
   React: "#61DAFB",
@@ -30,6 +34,7 @@ const categoryColors = {
 
 export const Progress = () => {
   const { userProgress } = useAuth();
+  const navigate = useNavigate();
 
   if (!userProgress) return null;
 
@@ -43,6 +48,7 @@ export const Progress = () => {
   return (
     <DashboardContainer>
       <Title>Your Progress</Title>
+      <BackButton onClick={() => navigate("/")}>← Back to Dashboard</BackButton>
 
       <StatsGrid>
         <StatCard>
