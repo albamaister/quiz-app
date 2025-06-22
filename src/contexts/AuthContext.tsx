@@ -1,5 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Category } from "../types/quiz";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+
+import { auth } from "../firebase"; 
 
 interface User {
   id: string;
@@ -41,21 +49,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    const savedProgress = localStorage.getItem("userProgress");
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        const restoredUser: User = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? "",
+          name:
+            firebaseUser.displayName ?? firebaseUser.email?.split("@")[0] ?? "",
+        };
 
-    if (savedUser) setUser(JSON.parse(savedUser));
-    if (savedProgress) setUserProgress(JSON.parse(savedProgress));
+        const storedProgress = localStorage.getItem("userProgress");
+        const progress: UserProgress = storedProgress
+          ? JSON.parse(storedProgress)
+          : {
+              totalQuestions: 0,
+              correctAnswers: 0,
+              completedQuizzes: 0,
+              categoryProgress: {
+                React: { correct: 0, total: 0 },
+                JavaScript: { correct: 0, total: 0 },
+                HTML: { correct: 0, total: 0 },
+                CSS: { correct: 0, total: 0 },
+              },
+            };
+
+        setUser(restoredUser);
+        setUserProgress(progress);
+      } else {
+        setUser(null);
+        setUserProgress(null);
+      }
+    });
+
+    return unsubscribe;
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const firebaseUser = result.user;
 
-    if (email && password) {
       const mockUser: User = {
-        id: "1",
-        email,
-        name: email.split("@")[0],
+        id: firebaseUser.uid,
+        email: firebaseUser.email ?? "",
+        name:
+          firebaseUser.displayName ?? firebaseUser.email?.split("@")[0] ?? "",
       };
 
       const mockProgress: UserProgress = {
@@ -72,14 +110,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setUser(mockUser);
       setUserProgress(mockProgress);
-
       localStorage.setItem("user", JSON.stringify(mockUser));
       localStorage.setItem("userProgress", JSON.stringify(mockProgress));
 
       return true;
+    } catch (error) {
+      console.error("Firebase login failed:", error);
+      return false;
     }
-
-    return false;
   };
 
   // register user
@@ -89,12 +127,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     email: string,
     password: string
   ): Promise<boolean> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // simula delay
-
-    if (name && email && password) {
-      const mockUser: User = {
-        id: "1",
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
         email,
+        password
+      );
+      const firebaseUser = result.user;
+
+      const mockUser: User = {
+        id: firebaseUser.uid,
+        email: firebaseUser.email ?? "",
         name,
       };
 
@@ -112,23 +155,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setUser(mockUser);
       setUserProgress(mockProgress);
-
       localStorage.setItem("user", JSON.stringify(mockUser));
       localStorage.setItem("userProgress", JSON.stringify(mockProgress));
 
       return true;
+    } catch (error) {
+      console.error("Firebase registration failed:", error);
+      return false;
     }
-
-    return false;
   };
 
   // logout
-
-  const logout = () => {
-    setUser(null);
-    setUserProgress(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("userProgress");
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      setUserProgress(null);
+      localStorage.removeItem("user");
+      localStorage.removeItem("userProgress");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const updateProgress = (category: Category, isCorrect: boolean) => {
