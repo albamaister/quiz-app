@@ -63,9 +63,10 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -124,7 +125,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </PasswordToggle>
         </InputGroup>
 
-        <SubmitButton type="submit" $loading={loading} disabled={loading}>
+        <SubmitButton data-testid="auth-submit" type="submit" $loading={loading} disabled={loading}>
           {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
         </SubmitButton>
       </Form>
@@ -135,6 +136,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         {isLogin ? "Don't have an account?" : "Already have an account?"}
         <ToggleLink
           type="button"
+          data-testid="auth-toggle"
           onClick={() => {
             setIsLogin(!isLogin);
             setError("");

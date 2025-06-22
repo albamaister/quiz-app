@@ -5,7 +5,8 @@
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "verbatimModuleSyntax": false,
-    "types": ["jest", "@testing-library/jest-dom"]
+    "types": ["jest", "@testing-library/jest-dom"],
+    "lib": ["dom", "esnext"] 
   },
   "include": [
     "**/*.test.ts",
