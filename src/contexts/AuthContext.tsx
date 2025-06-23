@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import type { Category } from "../types/quiz";
+import type { Category, User, UserProgress } from "../types/quiz";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -9,51 +9,10 @@ import {
 } from "firebase/auth";
 
 import { auth } from "../firebase";
-import { getDoc, doc, setDoc } from "firebase/firestore";
-import { db } from "../firebase";
-
-const saveProgressToFirestore = async (
-  userId: string,
-  progress: UserProgress
-) => {
-  try {
-    const ref = doc(db, "progress", userId);
-    await setDoc(ref, progress);
-  } catch (error) {
-    console.error("Failed to save progress to Firestore:", error);
-  }
-};
-
-const loadProgressFromFirestore = async (
-  userId: string
-): Promise<UserProgress | null> => {
-  try {
-    const ref = doc(db, "progress", userId);
-    const snapshot = await getDoc(ref);
-
-    if (snapshot.exists()) {
-      return snapshot.data() as UserProgress;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error("Error loading progress from Firestore:", error);
-    return null;
-  }
-};
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-}
-
-interface UserProgress {
-  totalQuestions: number;
-  correctAnswers: number;
-  completedQuizzes: number;
-  categoryProgress: Record<Category, { correct: number; total: number }>;
-}
+import {
+  loadProgressFromFirestore,
+  saveProgressToFirestore,
+} from "../services/userProgress";
 
 interface AuthContextType {
   user: User | null;
@@ -82,6 +41,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
   useEffect(() => {
+    const userLocalStorage = localStorage.getItem("user");
+    if (userLocalStorage) {
+      const userParsed = JSON.parse(userLocalStorage);
+
+      if (
+        userParsed &&
+        typeof userParsed === "object" &&
+        "id" in userParsed &&
+        "email" in userParsed &&
+        "name" in userParsed
+      ) {
+        setUser(userParsed as User);
+      }
+    }
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         const restoredUser: User = {
@@ -118,7 +91,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const userData: User = {
+        id: user.uid,
+        email: user.email ?? "",
+        name: user.displayName ?? user.email?.split("@")[0] ?? "",
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData));
       return true;
     } catch (error) {
       console.error("Firebase login failed:", error);

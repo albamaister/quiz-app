@@ -19,3 +19,16 @@ export interface QuizState {
   score: number;
   answeredQuestions: number[];
 }
+
+export interface UserProgress {
+  totalQuestions: number;
+  correctAnswers: number;
+  completedQuizzes: number;
+  categoryProgress: Record<Category, { correct: number; total: number }>;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+}
