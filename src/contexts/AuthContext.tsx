@@ -1,18 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Category, User, UserProgress } from "../types/quiz";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "../firebase";
 import {
   loadProgressFromFirestore,
   saveProgressToFirestore,
 } from "../services/userProgress";
+import { defaultEmptyProgress } from "../constants/defaultProgress";
+import { loginUser, logoutUser, registerUser } from "../services/firebaseAuth";
 
 interface AuthContextType {
   user: User | null;
@@ -40,6 +36,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
+  const login = loginUser;
+  const register = registerUser;
+  const logout = async () => {
+    await logoutUser();
+    setUser(null);
+    setUserProgress(null);
+  };
+
   useEffect(() => {
     const userLocalStorage = localStorage.getItem("user");
     if (userLocalStorage) {
@@ -66,19 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         loadProgressFromFirestore(firebaseUser.uid).then((progress) => {
           setUser(restoredUser);
-          setUserProgress(
-            progress ?? {
-              totalQuestions: 0,
-              correctAnswers: 0,
-              completedQuizzes: 0,
-              categoryProgress: {
-                React: { correct: 0, total: 0 },
-                JavaScript: { correct: 0, total: 0 },
-                HTML: { correct: 0, total: 0 },
-                CSS: { correct: 0, total: 0 },
-              },
-            }
-          );
+          setUserProgress(progress ?? defaultEmptyProgress);
         });
       } else {
         setUser(null);
@@ -88,55 +80,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return unsubscribe;
   }, []);
-
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      const userData: User = {
-        id: user.uid,
-        email: user.email ?? "",
-        name: user.displayName ?? user.email?.split("@")[0] ?? "",
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      return true;
-    } catch (error) {
-      console.error("Firebase login failed:", error);
-      return false;
-    }
-  };
-
-  // register user
-
-  const register = async (
-    name: string,
-    email: string,
-    password: string
-  ): Promise<boolean> => {
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      await updateProfile(result.user, { displayName: name });
-      return true;
-    } catch (error) {
-      console.error("Firebase registration failed:", error);
-      return false;
-    }
-  };
-
-  // logout
-  const logout = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-      setUserProgress(null);
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
 
   const updateProgress = (category: Category, isCorrect: boolean) => {
     if (!user || !userProgress) return;
@@ -172,9 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       ...userProgress,
       completedQuizzes: userProgress.completedQuizzes + 1,
     };
-
     setUserProgress(updatedProgress);
-
     saveProgressToFirestore(user.id, updatedProgress);
   };
 
