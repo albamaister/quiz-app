@@ -44,7 +44,7 @@ export const useQuizLogic = () => {
 
   const handleNextQuestion = () => {
     if (quizState.currentQuestion === questions.length - 1) {
-      completeQuiz(quizState.score, questions.length);
+      completeQuiz();
     }
 
     setQuizState((prev) => ({
