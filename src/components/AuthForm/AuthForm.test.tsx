@@ -13,6 +13,17 @@ jest.mock("../../contexts/AuthContext", () => {
   };
 });
 
+jest.mock("../../firebase", () => ({
+  auth: {
+    onAuthStateChanged: jest.fn(),
+    currentUser: null,
+    signInWithEmailAndPassword: jest.fn(),
+    createUserWithEmailAndPassword: jest.fn(),
+    signOut: jest.fn(),
+  },
+  db: {},
+}));
+
 describe("AuthForm", () => {
   const EMAIL = "test@example.com";
   const PASSWORD = "securepass";
