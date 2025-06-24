@@ -6,22 +6,26 @@ import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { Quiz } from "./pages/Quiz";
 import { Progress } from "./pages/Progress";
+import { Footer } from "./components/Footer";
 
-const MainContainer = styled.div`
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background: ${({ theme }) => theme.colors.background};
+  /* background: ${({ theme }) => theme.colors.background}; */
 `;
 
-const ContentContainer = styled.main`
+const MainContent = styled.main`
   padding: ${({ theme }) => theme.spacing.xl} 0;
+  flex: 1;
 `;
 
 export const App = () => {
   return (
     <Router>
-      <MainContainer>
+      <AppContainer>
         <Header />
-        <ContentContainer>
+        <MainContent>
           <Routes>
             <Route
               path="/"
@@ -47,11 +51,11 @@ export const App = () => {
                 </PrivateRoute>
               }
             />
-
             <Route path="/login" element={<Login />} />
           </Routes>
-        </ContentContainer>
-      </MainContainer>
+        </MainContent>
+        <Footer />
+      </AppContainer>
     </Router>
   );
 };
