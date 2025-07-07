@@ -38,19 +38,19 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     setError("");
 
     try {
-      let success = false;
+      let result = null;
 
       if (isLogin) {
-        success = await login(formData.email, formData.password);
+        result = await login(formData.email, formData.password);
       } else {
-        success = await register(
+        result = await register(
           formData.name,
           formData.email,
           formData.password
         );
       }
 
-      if (success) {
+      if (result) {
         onSuccess();
       } else {
         setError("Authentication failed. Please try again.");
@@ -63,7 +63,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-     const { name, value } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
@@ -125,7 +125,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </PasswordToggle>
         </InputGroup>
 
-        <SubmitButton data-testid="auth-submit" type="submit" $loading={loading} disabled={loading}>
+        <SubmitButton
+          data-testid="auth-submit"
+          type="submit"
+          $loading={loading}
+          disabled={loading}
+        >
           {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
         </SubmitButton>
       </Form>
