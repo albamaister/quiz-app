@@ -50,6 +50,7 @@ export const registerUser = async (
     await setDoc(doc(db, "users", uid), newUser);
     await updateProfile(result.user, { displayName: name });
 
+    localStorage.setItem("user", JSON.stringify(newUser));
     return newUser;
   } catch (error) {
     console.error("Firebase registration failed:", error);

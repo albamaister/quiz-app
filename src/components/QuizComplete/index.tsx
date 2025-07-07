@@ -8,7 +8,6 @@ import {
   ScoreText,
 } from "./styles";
 import { ActionButton } from "../../pages/Quiz/styles";
-import { questions } from "../../data/questions";
 
 interface QuizCompleteProps {
   score: number;
@@ -31,7 +30,7 @@ export const QuizComplete: React.FC<QuizCompleteProps> = ({
       <CompletionTitle>Quiz Complete!</CompletionTitle>
 
       <ScoreDisplay>
-        {score}/{questions.length}
+        {score}/{10}
       </ScoreDisplay>
       <ScoreText>{percentage}% Correct</ScoreText>
 

@@ -7,6 +7,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { Quiz } from "./pages/Quiz";
 import { Progress } from "./pages/Progress";
 import { Footer } from "./components/Footer";
+import QuestionUploader from "./components/QuestionUploader";
 
 const AppContainer = styled.div`
   display: flex;
@@ -52,6 +53,14 @@ export const App = () => {
               }
             />
             <Route path="/login" element={<Login />} />
+            <Route
+              path="/upload"
+              element={
+                <PrivateRoute requireAdmin>
+                  <QuestionUploader />
+                </PrivateRoute>
+              }
+            />
           </Routes>
         </MainContent>
         <Footer />

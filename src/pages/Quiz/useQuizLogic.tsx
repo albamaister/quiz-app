@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import type { QuizState } from "../../types/quiz";
-import { questions } from "../../data/questions";
+import type { Question, QuizState } from "../../types/quiz";
+import { getAllQuestions } from "../../services/questions";
 
 export const useQuizLogic = () => {
   const { updateProgress, completeQuiz } = useAuth();
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+
 
   const [quizState, setQuizState] = useState<QuizState>({
     currentQuestion: 0,
@@ -13,6 +16,16 @@ export const useQuizLogic = () => {
     score: 0,
     answeredQuestions: [],
   });
+
+  useEffect(() => {
+  const fetchQuestions = async () => {
+    const all = await getAllQuestions();
+    const shuffled = all.sort(() => 0.5 - Math.random()).slice(0, 10);
+    setQuestions(shuffled);
+  };
+  fetchQuestions();
+}, []);
+
 
   const currentQuestion = questions[quizState.currentQuestion];
   const isQuizComplete = quizState.currentQuestion >= questions.length;
