@@ -1,54 +1,71 @@
-# React + TypeScript + Vite
+# 🧠 Quiz App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive quiz application built with React, Firebase, and Styled Components. Users can register, log in, and take randomized quizzes on frontend development topics like JavaScript, React, HTML, and CSS. The app tracks progress and supports role-based access for uploading new quiz data.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Firebase Authentication (register, login, logout)
+- Randomized quizzes with 10 questions per session
+- User progress tracking (score, category stats)
+- Light/Dark theme toggle
+- Admin-only upload tool for adding questions via Excel
+- Unit tests with Jest and React Testing Library
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend:** React + Vite + TypeScript
+- **Styling:** Styled Components
+- **State Management:** React Context + Hooks
+- **Backend:** Firebase Auth + Firestore
+- **Testing:** Jest + React Testing Library
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🧪 Running Locally
+
+Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/your-username/quiz-app.git
+cd quiz-app
+yarn install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Start the development server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+yarn dev
 ```
+
+To run tests:
+
+```bash
+yarn test
+```
+
+## 🔒 Firebase Setup
+
+1. Create a Firebase project and enable **Authentication** (Email/Password)
+2. Enable **Firestore Database**
+3. Add your Firebase config to a `.env` file:
+
+```env
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=sender_id
+VITE_FIREBASE_APP_ID=app_id
+```
+
+4. Set Firestore rules appropriately for user and quiz access.
+
+## ✨ Admin Access
+
+Users with the email `bryan@admin.com` are treated as admins and can access the question uploader to import `.xlsx` files into Firestore.
+
+## 🤝 Contributing
+
+Feel free to fork this repo and submit a pull request. Suggestions and improvements are welcome!
+
+## 📄 License
+
+This project is licensed under the MIT License.
