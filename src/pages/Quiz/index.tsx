@@ -15,16 +15,17 @@ import {
 import { ArrowRight } from "lucide-react";
 
 import { useQuizLogic } from "./useQuizLogic";
-import { questions } from "../../data/questions";
 import { ProgressBarComponent } from "../../components/ProgressBarComponent";
 import { OptionButtonComponent } from "../../components/OptionButtonComponent";
 import { QuizComplete } from "../../components/QuizComplete";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const Quiz = () => {
   const {
     quizState,
     currentQuestion,
     isQuizComplete,
+    loading,
     progressPercentage,
     handleButtonClick,
     getButtonText,
@@ -34,8 +35,12 @@ export const Quiz = () => {
 
   const navigate = useNavigate();
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   if (isQuizComplete) {
-    const percentage = Math.round((quizState.score / questions.length) * 100);
+    const percentage = Math.round((quizState.score / 10) * 100);
 
     return (
       <QuizContainer>

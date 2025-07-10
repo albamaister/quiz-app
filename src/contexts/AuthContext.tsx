@@ -2,19 +2,24 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { Category, User, UserProgress } from "../types/quiz";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   loadProgressFromFirestore,
   saveProgressToFirestore,
 } from "../services/userProgress";
 import { defaultEmptyProgress } from "../constants/defaultProgress";
 import { loginUser, logoutUser, registerUser } from "../services/firebaseAuth";
+import { doc, getDoc } from "firebase/firestore";
 
 interface AuthContextType {
   user: User | null;
   userProgress: UserProgress | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string) => Promise<boolean>;
+  register: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<User | null>;
   logout: () => void;
   updateProgress: (category: Category, isCorrect: boolean) => void;
   completeQuiz: () => void;
@@ -37,11 +42,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
   const login = loginUser;
-  const register = registerUser;
+  const register = async (name: string, email: string, password: string) => {
+    const newUser = await registerUser(name, email, password);
+
+    if (newUser) {
+      setUser(newUser);
+      return newUser;
+    }
+
+    return null;
+  };
+
   const logout = async () => {
     await logoutUser();
     setUser(null);
     setUserProgress(null);
+  };
+
+  const loadUserFromFirestore = async (uid: string): Promise<User | null> => {
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) return snap.data() as User;
+    return null;
   };
 
   useEffect(() => {
@@ -54,24 +76,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         typeof userParsed === "object" &&
         "id" in userParsed &&
         "email" in userParsed &&
-        "name" in userParsed
+        "name" in userParsed &&
+        "role" in userParsed
       ) {
         setUser(userParsed as User);
       }
     }
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const restoredUser: User = {
-          id: firebaseUser.uid,
-          email: firebaseUser.email ?? "",
-          name:
-            firebaseUser.displayName ?? firebaseUser.email?.split("@")[0] ?? "",
-        };
-
-        loadProgressFromFirestore(firebaseUser.uid).then((progress) => {
-          setUser(restoredUser);
-          setUserProgress(progress ?? defaultEmptyProgress);
-        });
+        try {
+          const userFromFirestore = await loadUserFromFirestore(
+            firebaseUser.uid
+          );
+          if (userFromFirestore) {
+            setUser(userFromFirestore);
+            const progress = await loadProgressFromFirestore(firebaseUser.uid);
+            setUserProgress(progress ?? defaultEmptyProgress);
+          } else {
+            console.error("User not found in Firestore");
+          }
+        } catch (err) {
+          console.error("Error restoring user", err);
+        }
       } else {
         setUser(null);
         setUserProgress(null);

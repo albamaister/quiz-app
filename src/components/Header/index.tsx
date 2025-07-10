@@ -1,4 +1,4 @@
-import { Moon, Sun, Code2, User, LogOut } from "lucide-react";
+import { Moon, Sun, Code2, User, LogOut, Upload } from "lucide-react";
 import { useTheme } from "../../contexts/ThemeContext";
 import {
   HeaderActions,
@@ -11,6 +11,7 @@ import {
   UserInfo,
 } from "./styles";
 import { useAuth } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 export const Header: React.FC = () => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -40,6 +41,13 @@ export const Header: React.FC = () => {
             <IconButton onClick={logout} aria-label="Logout">
               <LogOut size={20} />
             </IconButton>
+          )}
+          {user?.role === "admin" && (
+            <Link to="/upload" style={{ fontWeight: 500, marginRight: "1rem" }}>
+              <IconButton aria-label="Upload">
+                <Upload size={20} />
+              </IconButton>
+            </Link>
           )}
         </HeaderActions>
       </HeaderContent>

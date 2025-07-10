@@ -5,7 +5,8 @@ import {
   updateProfile,
 } from "firebase/auth";
 import type { User } from "../types/quiz";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export const loginUser = async (
   email: string,
@@ -17,6 +18,7 @@ export const loginUser = async (
       id: user.uid,
       email: user.email ?? "",
       name: user.displayName ?? user.email?.split("@")[0] ?? "",
+      role: user.email === "bryan@admin.com" ? "admin" : "user",
     };
 
     localStorage.setItem("user", JSON.stringify(userData));
@@ -33,14 +35,26 @@ export const registerUser = async (
   name: string,
   email: string,
   password: string
-): Promise<boolean> => {
+): Promise<User | null> => {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = result.user.uid;
+
+    const newUser: User = {
+      id: uid,
+      email,
+      name,
+      role: email === "bryan@admin.com" ? "admin" : "user",
+    };
+
+    await setDoc(doc(db, "users", uid), newUser);
     await updateProfile(result.user, { displayName: name });
-    return true;
+
+    localStorage.setItem("user", JSON.stringify(newUser));
+    return newUser;
   } catch (error) {
     console.error("Firebase registration failed:", error);
-    return false;
+    return null;
   }
 };
 
