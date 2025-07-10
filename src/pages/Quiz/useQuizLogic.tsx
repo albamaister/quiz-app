@@ -5,6 +5,7 @@ import { getAllQuestions } from "../../services/questions";
 
 export const useQuizLogic = () => {
   const { updateProgress, completeQuiz } = useAuth();
+  const [loading, setLoading] = useState(true)
 
   const [questions, setQuestions] = useState<Question[]>([]);
 
@@ -22,6 +23,7 @@ export const useQuizLogic = () => {
     const all = await getAllQuestions();
     const shuffled = all.sort(() => 0.5 - Math.random()).slice(0, 10);
     setQuestions(shuffled);
+    setLoading(false)
   };
   fetchQuestions();
 }, []);
@@ -100,6 +102,7 @@ export const useQuizLogic = () => {
 
   return {
     quizState,
+    loading,
     currentQuestion,
     isQuizComplete,
     progressPercentage,
