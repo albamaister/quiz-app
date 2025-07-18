@@ -22,6 +22,7 @@ export const QuestionText = styled.h2`
   color: ${({ theme }) => theme.colors.text};
   line-height: 1.5;
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+  white-space: pre-wrap
 `;
 
 // CategoryBadge

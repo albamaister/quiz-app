@@ -55,7 +55,6 @@ const QuestionUploader = () => {
         });
 
         setQuestions(transformed);
-        console.log("Transformed questions:", transformed);
       } catch (error) {
         console.error("Error transforming questions:", error);
         alert("Invalid format in one or more rows.");
