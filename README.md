@@ -60,7 +60,7 @@ VITE_FIREBASE_APP_ID=app_id
 
 ## ✨ Admin Access
 
-Users with the email `bryan@admin.com` are treated as admins and can access the question uploader to import `.xlsx` files into Firestore.
+Users with an administrator email address can access the question uploader to import `.xlsx` files into Firestore.
 
 ## 🤝 Contributing
 
